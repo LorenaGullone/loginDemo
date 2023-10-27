@@ -5,6 +5,9 @@ import com.login.demo.repository.UserRepository;
 import com.login.demo.support.UserAlreadyExistsException;
 import com.login.demo.support.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,8 +41,18 @@ public class AccountingService {
         return user;
     }
 
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+    public String delete(String username) throws UserAlreadyExistsException, UserNotFoundException {
+        if ( !userRepository.existsByUsername(username) ) {
+            throw new UserNotFoundException();
+        }
+        userRepository.deleteUserByUsername(username);
+        return username;
+    }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
 
 }
