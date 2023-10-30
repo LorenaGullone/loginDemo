@@ -42,7 +42,7 @@ public class AccountingService {
     }
 
     @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-    public String delete(String username) throws UserAlreadyExistsException, UserNotFoundException {
+    public String delete(String username) throws UserNotFoundException {
         if ( !userRepository.existsByUsername(username) ) {
             throw new UserNotFoundException();
         }
